@@ -14,7 +14,7 @@ Built on [Baileys](https://github.com/WhiskeySockets/Baileys) (unofficial WhatsA
 - **Send** — ad-hoc text messages from any connected session (contact picker + template autofill)
 - **Scheduled** — one-shot messages (datetime) or recurring (cron expression), 20s dispatch tick
 - **Templates & Contacts** — reusable message templates, contact book with upsert by phone
-- **Inbox** — inbound/outbound history stored in SQLite; per-chat thread view
+- **Inbox** — inbound/outbound history stored in SQLite; per-chat thread view; keyword/date search and CSV exports
 - **Dashboard** — counters + recent outbound at a glance
 
 ## Requirements
@@ -30,6 +30,19 @@ npm start          # or: npm run dev (node --watch)
 ```
 
 Open `http://localhost:8300` (override with `PORT` env).
+
+### Production with PM2
+
+Install PM2 once, then run the included process configuration:
+
+```bash
+npm install -g pm2
+pm2 start ecosystem.config.js
+pm2 save
+pm2 startup
+```
+
+PM2 restarts the app after crashes and writes timestamped stdout/stderr logs to `logs/`. Keep `logs/` on a filesystem with enough capacity and review it periodically; rotate or purge old files according to your host policy.
 
 ## Link your first WhatsApp session
 
@@ -50,7 +63,7 @@ Session credentials are stored under `data/baileys/<name>/` and auto-restored on
 ```
 src/
   server.js      Express routes (7 pages + /api/qr)
-  baileys.js     Multi-session manager (QR login, reconnect, inbox capture)
+  baileys.js     Multi-session manager (QR login, reconnect with backoff, inbox capture)
   scheduler.js   20s dispatch tick + cron "next run" calculator
   db.js          SQLite schema + helpers (data/wa.db, WAL mode)
   views/         EJS pages + partials
