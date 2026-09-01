@@ -14,8 +14,7 @@ function nextFromCron(expr, from = new Date()) {
   const d = new Date(from.getTime() + MINUTE);
   d.setSeconds(0, 0);
   const limit = new Date(from.getTime() + 366 * 24 * 60 * MINUTE);
-  const matcher = cron.schedulerFn(expr); // not public; fall back to manual match
-  // manual match: parse fields and test
+  // Manual match: parse fields and test.
   const parts = expr.trim().split(/\s+/);
   const [min, hour, dom, mon, dow] = parts;
   const fieldMatch = (spec, val) => {

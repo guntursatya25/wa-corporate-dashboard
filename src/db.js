@@ -97,6 +97,19 @@ module.exports = {
     db.prepare(
       `SELECT * FROM messages WHERE direction = ? ORDER BY created_at DESC LIMIT ?`
     ).all(direction, limit),
+  searchMessages: ({ query = "", from = "", to = "", limit = 200 } = {}) => {
+    const clauses = [];
+    const params = [];
+    if (query.trim()) {
+      clauses.push("(body LIKE ? OR chat_id LIKE ? OR contact_name LIKE ?)");
+      const term = `%${query.trim()}%`;
+      params.push(term, term, term);
+    }
+    if (from) { clauses.push("created_at >= ?"); params.push(`${from}T00:00:00.000Z`); }
+    if (to) { clauses.push("created_at < ?"); params.push(`${to}T23:59:59.999Z`); }
+    params.push(limit);
+    return db.prepare(`SELECT * FROM messages ${clauses.length ? `WHERE ${clauses.join(" AND ")}` : ""} ORDER BY created_at DESC LIMIT ?`).all(...params);
+  },
   listChat: (chatId, limit = 100) =>
     db.prepare(
       `SELECT * FROM messages WHERE chat_id = ? ORDER BY created_at ASC LIMIT ?`
@@ -126,4 +139,7 @@ module.exports = {
     db.prepare("UPDATE scheduled SET run_at=?, last_run_at=? WHERE id=?").run(nextRunAt, nowIso(), id),
   cancelScheduled: (id) =>
     db.prepare("UPDATE scheduled SET status='cancelled' WHERE id=? AND status='pending'").run(id),
+
+  exportMessages: () => db.prepare("SELECT * FROM messages ORDER BY created_at ASC").all(),
+  exportContacts: () => db.prepare("SELECT * FROM contacts ORDER BY name").all(),
 };

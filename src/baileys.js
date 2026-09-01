@@ -17,7 +17,11 @@ const fs = require("fs");
 const QRCode = require("qrcode");
 const store = require("./db");
 
-const logger = pino({ level: "warn" });
+const logger = pino({ level: process.env.LOG_LEVEL || "warn" });
+const reconnectTimers = new Map();
+const reconnectAttempts = new Map();
+const RECONNECT_BASE_MS = 3000;
+const RECONNECT_MAX_MS = 60000;
 const sessionsDir = path.join(__dirname, "..", "data", "baileys");
 fs.mkdirSync(sessionsDir, { recursive: true });
 
@@ -45,6 +49,11 @@ function listSessions() {
 
 async function startSession(name, { onStatus = () => {} } = {}) {
   if (sessions.has(name)) return sessionState(name);
+  const pendingTimer = reconnectTimers.get(name);
+  if (pendingTimer) {
+    clearTimeout(pendingTimer);
+    reconnectTimers.delete(name);
+  }
   const authDir = path.join(sessionsDir, name);
   fs.mkdirSync(authDir, { recursive: true });
   const { state, saveCreds } = await useMultiFileAuthState(authDir);
@@ -72,18 +81,31 @@ async function startSession(name, { onStatus = () => {} } = {}) {
     if (u.connection === "open") {
       state_.qr = null;
       state_.phone = sock.user?.id?.split(":")[0] || null;
+      reconnectAttempts.delete(name);
       setStatus("connected");
     }
     if (u.connection === "close") {
       const code = u.lastDisconnect?.error?.output?.statusCode;
       sessions.delete(name);
       if (code === DisconnectReason.loggedOut) {
+        reconnectAttempts.delete(name);
         fs.rmSync(authDir, { recursive: true, force: true });
         setStatus("logged_out");
       } else {
-        // auto-reconnect (stream conflict, restartRequired, network...)
+        // Auto-reconnect with capped exponential backoff and jitter.
+        const attempt = (reconnectAttempts.get(name) || 0) + 1;
+        reconnectAttempts.set(name, attempt);
+        const backoff = Math.min(RECONNECT_MAX_MS, RECONNECT_BASE_MS * 2 ** (attempt - 1));
+        const jitter = Math.floor(Math.random() * Math.min(1000, backoff / 2));
+        const delay = Math.min(RECONNECT_MAX_MS, backoff + jitter);
         setStatus("reconnecting");
-        setTimeout(() => startSession(name, { onStatus }).catch(() => {}), 3000);
+        const timer = setTimeout(() => {
+          reconnectTimers.delete(name);
+          startSession(name, { onStatus }).catch((e) =>
+            console.error(`reconnect ${name}:`, e.message)
+          );
+        }, delay);
+        reconnectTimers.set(name, timer);
       }
     }
   });
@@ -119,6 +141,12 @@ function getSession(name) {
 }
 
 async function stopSession(name) {
+  const timer = reconnectTimers.get(name);
+  if (timer) {
+    clearTimeout(timer);
+    reconnectTimers.delete(name);
+  }
+  reconnectAttempts.delete(name);
   const s = sessions.get(name);
   if (s) {
     try { await s.sock.logout(); } catch { try { s.sock.end(); } catch {} }

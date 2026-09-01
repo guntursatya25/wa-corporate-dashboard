@@ -2,6 +2,20 @@
 
 <h1>收件箱</h1>
 
+<div class="card">
+  <form method="get" action="/inbox">
+    <div class="row">
+      <div><label for="q">搜索消息 / 联系人 / 聊天</label><input id="q" name="q" value="<%= filters?.query || '' %>" placeholder="关键词"></div>
+      <div><label for="from">从日期</label><input id="from" type="date" name="from" value="<%= filters?.from || '' %>"></div>
+      <div><label for="to">到日期</label><input id="to" type="date" name="to" value="<%= filters?.to || '' %>"></div>
+    </div>
+    <button type="submit">搜索</button>
+    <a class="button-link" href="/inbox">清除</a>
+    <a class="button-link" href="/export/messages.csv">导出消息 CSV</a>
+    <a class="button-link" href="/export/contacts.csv">导出联系人 CSV</a>
+  </form>
+</div>
+
 <% if (chat) { %>
   <div class="card">
     <h2 style="margin-top:0;">会话：<%= chat_id %></h2>

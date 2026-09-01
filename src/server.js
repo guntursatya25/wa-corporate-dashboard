@@ -12,6 +12,9 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const csvCell = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
+const toCsv = (rows) => rows.length ? `${Object.keys(rows[0]).map(csvCell).join(",")}\n${rows.map((row) => Object.keys(rows[0]).map((key) => csvCell(row[key])).join(",")).join("\n")}\n` : "";
+
 // Optional HTTP Basic Auth. Configure both variables to protect the dashboard.
 const ADMIN_USER = process.env.ADMIN_USER;
 const ADMIN_PASS = process.env.ADMIN_PASS;
@@ -186,13 +189,23 @@ app.post("/contacts/delete", (req, res) => {
 // ---------- inbox ----------
 app.get("/inbox", (req, res) => {
   const chatId = req.query.chat || null;
+  const filters = { query: req.query.q || "", from: req.query.from || "", to: req.query.to || "" };
+  const filtered = filters.query || filters.from || filters.to;
+  const messages = filtered ? store.searchMessages(filters) : null;
   res.render("inbox", {
-    inbox: store.listMessages("in", 200),
-    outbox: store.listMessages("out", 200),
+    inbox: messages ? messages.filter((m) => m.direction === "in") : store.listMessages("in", 200),
+    outbox: messages ? messages.filter((m) => m.direction === "out") : store.listMessages("out", 200),
     chat: chatId ? store.listChat(chatId, 100) : null,
     chat_id: chatId,
+    filters,
     flash: null,
   });
+});
+
+app.get("/export/:type.csv", (req, res) => {
+  const rows = req.params.type === "contacts" ? store.exportContacts() : req.params.type === "messages" ? store.exportMessages() : null;
+  if (!rows) return res.status(404).send("Not found");
+  res.type("text/csv").set("Content-Disposition", `attachment; filename=${req.params.type}.csv`).send(toCsv(rows));
 });
 
 // ---------- boot ----------
