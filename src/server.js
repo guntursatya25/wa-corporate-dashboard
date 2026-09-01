@@ -12,6 +12,27 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Optional HTTP Basic Auth. Configure both variables to protect the dashboard.
+const ADMIN_USER = process.env.ADMIN_USER;
+const ADMIN_PASS = process.env.ADMIN_PASS;
+if ((ADMIN_USER && !ADMIN_PASS) || (!ADMIN_USER && ADMIN_PASS)) {
+  throw new Error("ADMIN_USER and ADMIN_PASS must be configured together");
+}
+if (ADMIN_USER && ADMIN_PASS) {
+  app.use((req, res, next) => {
+    const header = req.headers.authorization || "";
+    const encoded = header.startsWith("Basic ") ? header.slice(6) : "";
+    let credentials = "";
+    try { credentials = Buffer.from(encoded, "base64").toString("utf8"); } catch {}
+    const separator = credentials.indexOf(":");
+    const user = separator >= 0 ? credentials.slice(0, separator) : "";
+    const pass = separator >= 0 ? credentials.slice(separator + 1) : "";
+    if (user === ADMIN_USER && pass === ADMIN_PASS) return next();
+    res.set("WWW-Authenticate", 'Basic realm="WA Corporate Dashboard"');
+    res.status(401).send("Authentication required");
+  });
+}
+
 // ---------- helpers ----------
 const flash = (msg, kind = "ok") => ({ msg, kind });
 
@@ -180,6 +201,8 @@ async function main() {
   startScheduler();
   app.listen(PORT, () => console.log(`wa-corporate-dashboard on http://localhost:${PORT}`));
 }
+
+module.exports = { app, main };
 
 main().catch((e) => {
   console.error(e);

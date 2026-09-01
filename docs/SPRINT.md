@@ -13,7 +13,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 | Milestone | Scope | Status | Progress |
 |---|---|---|---|
 | **M1 — Make it run** | 7 EJS views + layout, README, boot verification | ✅ done | 10/10 |
-| **M2 — Hardening** | Basic auth, process manager, reconnect/backoff | ⬜ todo | 0/4 |
+| **M2 — Hardening** | Basic auth, process manager, reconnect/backoff | 🔵 in progress | 1/4 |
 | **M3 — Features** | Media send, bulk + throttle, inbox search, CSV export | ⬜ todo | 0/5 |
 | **M4 — Quality** | Smoke tests, CI, typecheck/lint | ⬜ todo | 0/3 |
 
@@ -43,7 +43,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 
 | # | Task | PRD ref | Status | Notes |
 |---|---|---|---|---|
-| 2.1 | Basic auth (env `ADMIN_USER`/`ADMIN_PASS`) on all routes | 4.2 / 9 Q1 | ⬜ | decided: M2 |
+| 2.1 | Basic auth (env `ADMIN_USER`/`ADMIN_PASS`) on all routes | 4.2 / 9 Q1 | ✅ | Optional; both variables required together; invalid credentials return 401 |
 | 2.2 | Process manager (systemd unit or pm2) + docs | 4.2 | ⬜ | |
 | 2.3 | Baileys reconnect backoff + jitter | 4.2 | ⬜ | current: fixed 3s |
 | 2.4 | Log rotation / pino file transport | 4.2 | ⬜ | |
@@ -89,6 +89,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 
 ## Changelog
 
+- **2026-09-01** — M2 task 2.1 complete: optional HTTP Basic Auth added; README updated. M2 progress 1/4.
 - **2026-09-01** — Sprint 1 complete: 7 EJS views + partials + README shipped; all routes verified. M1 done, M2 next.
 - **2026-09-01** — Sprint board created from PRD v1.0. Sprint 1 opened (M1, tasks 1.1–1.10).
 - **2026-09-01** — PRD committed (`bb26918`); repo live at `guntursatya25/wa-corporate-dashboard`.

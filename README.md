@@ -59,8 +59,16 @@ data/            Runtime data — gitignored (WhatsApp creds + wa.db)
 
 ## Security notes
 
-- The dashboard has **no authentication yet** (planned: M2 basic auth via env) — do not
-  expose it to the public internet; keep it on localhost/VPN or behind a reverse proxy.
+- The dashboard supports optional HTTP Basic Auth. Set **both** variables to enable it:
+
+  ```bash
+  ADMIN_USER=admin ADMIN_PASS='use-a-long-random-password' npm start
+  ```
+
+  Requests without valid credentials receive `401 Authentication required`. If only one
+  variable is set, the app refuses to boot so the dashboard is not accidentally exposed.
+- If authentication is not configured, do not expose the dashboard to the public internet;
+  keep it on localhost/VPN or behind a reverse proxy.
 - `data/` contains WhatsApp credentials — never commit it (already gitignored).
 
 ## Docs
