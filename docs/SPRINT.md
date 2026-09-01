@@ -3,7 +3,7 @@
 Source of truth: [`docs/PRD.md`](./PRD.md)
 Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ blocked
 
-**Current sprint:** Sprint 2 — Hardening (M2) — complete
+**Current sprint:** Sprint 3 — Features (M3) — in progress
 **Last updated:** 2026-09-01
 
 ---
@@ -56,7 +56,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 | 3.2 | Bulk send to contact group + throttle (min interval) | 4.3 | ⬜ | ban-risk guard |
 | 3.3 | Inbox search (body/contact LIKE) + date filter | 4.3 | ✅ | Keyword and inclusive date filters on inbox |
 | 3.4 | CSV export (messages, contacts) | 4.3 | ✅ | CSV download routes from inbox |
-| 3.5 | Timezone handling for `run_at` display + entry | 9 Q2 | ⬜ | decided: M3 |
+| 3.5 | Timezone handling for `run_at` display + entry | 9 Q2 | ✅ | Local UI timezone via `TZ`; UTC persisted in DB |
 
 ## Backlog — M4: Quality
 
@@ -89,6 +89,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 
 ## Changelog
 
+- **2026-09-01** — M3 task 3.5 complete: scheduled times now use configured local timezone in the UI and UTC in storage. M3 progress 3/5.
 - **2026-09-01** — M2 complete: PM2 config/docs, reconnect backoff+jitter, and operational log handling documented. M2 progress 4/4.
 - **2026-09-01** — M3 tasks 3.3–3.4 complete: inbox search/date filters and messages/contacts CSV exports added. M3 progress 2/5.
 - **2026-09-01** — M2 task 2.1 complete: optional HTTP Basic Auth added; README updated. M2 progress 1/4.

@@ -12,7 +12,7 @@ Built on [Baileys](https://github.com/WhiskeySockets/Baileys) (unofficial WhatsA
 
 - **Multi-session** — link several WhatsApp accounts; QR login; auto-reconnect; per-session auth stored on disk
 - **Send** — ad-hoc text messages from any connected session (contact picker + template autofill)
-- **Scheduled** — one-shot messages (datetime) or recurring (cron expression), 20s dispatch tick
+- **Scheduled** — one-shot messages (local timezone input, UTC storage) or recurring (cron expression), 20s dispatch tick
 - **Templates & Contacts** — reusable message templates, contact book with upsert by phone
 - **Inbox** — inbound/outbound history stored in SQLite; per-chat thread view; keyword/date search and CSV exports
 - **Dashboard** — counters + recent outbound at a glance
@@ -54,8 +54,8 @@ Session credentials are stored under `data/baileys/<name>/` and auto-restored on
 
 ## Scheduling
 
-- **One-shot:** pick date & time (server time = UTC)
-- **Recurring:** cron expression (5 fields, e.g. `0 9 * * 1-5` = weekdays at 09:00 UTC)
+- **One-shot:** pick date & time in the configured server timezone (`TZ`, default system timezone); values are stored as UTC
+- **Recurring:** cron expression (5 fields, e.g. `0 9 * * 1-5` = weekdays at 09:00 in the server timezone)
 - Dispatcher runs every 20 seconds; cancel any pending item from the 计划 page
 
 ## Project structure

@@ -55,7 +55,7 @@
           <input id="cron" name="cron" placeholder="例如 0 9 * * 1-5（工作日每天 9:00）">
         </div>
       </div>
-      <p class="muted">二选一：填了 cron 就忽略指定时间。服务器时间为 UTC。</p>
+      <p class="muted">二选一：填了 cron 就忽略指定时间。输入和显示使用 <strong><%= timezone %></strong>；数据库内部保存 UTC。</p>
 
       <button type="submit">创建计划</button>
     </form>
@@ -71,7 +71,7 @@
       <tr><th>执行时间 (UTC)</th><th>会话</th><th>收件人</th><th>内容</th><th>循环</th><th></th></tr>
       <% for (const s of pending) { %>
         <tr>
-          <td><%= s.run_at.replace('T', ' ').slice(0, 16) %></td>
+          <td><%= formatLocalDateTime(s.run_at) %></td>
           <td><%= s.session %></td>
           <td><%= s.chat_id %></td>
           <td><pre class="body"><%= s.body.length > 60 ? s.body.slice(0, 60) + '…' : s.body %></pre></td>
@@ -98,7 +98,7 @@
       <% for (const s of history) { %>
         <tr>
           <td><span class="badge <%= s.status %>"><%= s.status %></span></td>
-          <td class="muted"><%= s.last_run_at ? s.last_run_at.replace('T', ' ').slice(0, 16) : '—' %></td>
+          <td class="muted"><%= s.last_run_at ? formatLocalDateTime(s.last_run_at) : '—' %></td>
           <td><%= s.session %></td>
           <td><%= s.chat_id %></td>
           <td><pre class="body"><%= s.body.length > 50 ? s.body.slice(0, 50) + '…' : s.body %></pre></td>

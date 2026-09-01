@@ -38,6 +38,18 @@ if (ADMIN_USER && ADMIN_PASS) {
 
 // ---------- helpers ----------
 const flash = (msg, kind = "ok") => ({ msg, kind });
+const configuredTimezone = process.env.TZ || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+const localDateTimeToUtc = (value) => {
+  if (!value) return null;
+  const match = /^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2})$/.exec(value);
+  if (!match) return null;
+  const [, year, month, day, hour, minute] = match;
+  const local = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
+  return Number.isNaN(local.getTime()) ? null : local.toISOString();
+};
+const formatLocalDateTime = (iso) => new Intl.DateTimeFormat("sv-SE", {
+  timeZone: configuredTimezone, dateStyle: "short", timeStyle: "short",
+}).format(new Date(iso));
 
 // ---------- overview ----------
 app.get("/", (req, res) => {
@@ -111,6 +123,8 @@ app.get("/scheduled", (req, res) => {
     pending: store.listScheduled("pending"),
     history: store.listScheduled(null, 40),
     flash: req.query.msg ? flash(req.query.msg, req.query.kind || "ok") : null,
+    timezone: configuredTimezone,
+    formatLocalDateTime,
   });
 });
 
@@ -126,9 +140,8 @@ app.post("/scheduled", (req, res) => {
     if (!next) return res.redirect("/scheduled?msg=Invalid+cron+expression&kind=err");
     runAt = next.toISOString();
   } else {
-    const d = new Date(run_at);
-    if (Number.isNaN(d.getTime())) return res.redirect("/scheduled?msg=Invalid+date&kind=err");
-    runAt = d.toISOString();
+    runAt = localDateTimeToUtc(run_at);
+    if (!runAt) return res.redirect("/scheduled?msg=Invalid+date&kind=err");
   }
   store.createScheduled({
     session,
