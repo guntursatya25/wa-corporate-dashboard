@@ -5,7 +5,7 @@ const fs = require("fs");
 const dataDir = path.join(__dirname, "..", "data");
 fs.mkdirSync(dataDir, { recursive: true });
 
-const db = new Database(path.join(dataDir, "wa.db"));
+const db = new Database(process.env.WA_DB_PATH || path.join(dataDir, "wa.db"));
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
 

@@ -3,7 +3,7 @@
 Source of truth: [`docs/PRD.md`](./PRD.md)
 Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ blocked
 
-**Current sprint:** Sprint 3 — Features (M3) — in progress
+**Current sprint:** Sprint 4 — Quality (M4) — in progress
 **Last updated:** 2026-09-01
 
 ---
@@ -15,7 +15,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 | **M1 — Make it run** | 7 EJS views + layout, README, boot verification | ✅ done | 10/10 |
 | **M2 — Hardening** | Basic auth, process manager, reconnect/backoff | ✅ done | 4/4 |
 | **M3 — Features** | Media send, bulk + throttle, inbox search, CSV export | 🔵 in progress | 2/5 |
-| **M4 — Quality** | Smoke tests, CI, typecheck/lint | ⬜ todo | 0/3 |
+| **M4 — Quality** | Smoke tests, CI, typecheck/lint | 🔵 in progress | 2/3 |
 
 ---
 
@@ -62,8 +62,8 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 
 | # | Task | PRD ref | Status | Notes |
 |---|---|---|---|---|
-| 4.1 | Boot smoke test (import modules, fake session dir) | 4.4 | ⬜ | |
-| 4.2 | GitHub Actions CI (install + smoke on push) | 4.4 | ⬜ | |
+| 4.1 | Boot smoke test (import modules, fake session dir) | 4.4 | ✅ | Dependency-free module and helper smoke coverage |
+| 4.2 | GitHub Actions CI (install + smoke on push) | 4.4 | ✅ | Node 20 workflow runs `npm run check` |
 | 4.3 | Route handler tests w/ supertest (no live WA) | 4.4 | ⬜ | |
 
 ---
@@ -89,6 +89,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 
 ## Changelog
 
+- **2026-09-01** — M4 tasks 4.1–4.2 complete: dependency-free smoke test and GitHub Actions CI added. M4 progress 2/3.
 - **2026-09-01** — M3 task 3.5 complete: scheduled times now use configured local timezone in the UI and UTC in storage. M3 progress 3/5.
 - **2026-09-01** — M2 complete: PM2 config/docs, reconnect backoff+jitter, and operational log handling documented. M2 progress 4/4.
 - **2026-09-01** — M3 tasks 3.3–3.4 complete: inbox search/date filters and messages/contacts CSV exports added. M3 progress 2/5.

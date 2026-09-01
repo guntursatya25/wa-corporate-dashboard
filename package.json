@@ -5,7 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "test": "node test/smoke.js",
+    "check": "node --check src/server.js && node --check src/db.js && node --check src/baileys.js && node --check src/scheduler.js && npm test"
   },
   "engines": { "node": ">=20" },
   "dependencies": {
