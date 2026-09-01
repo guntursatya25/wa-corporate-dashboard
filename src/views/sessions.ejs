@@ -1,0 +1,75 @@
+<%- include('partials/head', { active: 'sessions' }) %>
+
+<h1>会话管理</h1>
+
+<div class="card">
+  <h2 style="margin-top:0;">新增会话</h2>
+  <form method="post" action="/sessions/start" class="row">
+    <div>
+      <label for="name">会话名称（仅字母数字和 -）</label>
+      <input id="name" name="name" placeholder="例如 sales-1" required pattern="[\w-]+">
+    </div>
+    <div style="flex:0;">
+      <button type="submit">创建 / 连接</button>
+    </div>
+  </form>
+  <p class="muted" style="margin-bottom:0;">创建后会显示二维码，用 WhatsApp「已链接的设备」扫码绑定。</p>
+</div>
+
+<div class="card">
+  <% if (!sessions.length) { %>
+    <div class="empty">还没有会话 — 用上面的表单创建第一个</div>
+  <% } else { %>
+    <table>
+      <tr><th>名称</th><th>状态</th><th>手机号</th><th>已存凭据</th><th style="width:140px;"></th></tr>
+      <% for (const s of sessions) { const st = states[s.name] || {}; %>
+        <tr data-session="<%= s.name %>">
+          <td><strong><%= s.name %></strong></td>
+          <td><span class="badge <%= s.status %>" data-role="status"><%= s.status %></span></td>
+          <td data-role="phone"><%= s.phone || st.phone || '—' %></td>
+          <td><%= s.hasAuth ? '✓' : '—' %></td>
+          <td>
+            <form method="post" action="/sessions/stop" style="margin:0;" onsubmit="return confirm('确定断开并删除会话 <%= s.name %> ?')">
+              <input type="hidden" name="name" value="<%= s.name %>">
+              <button class="mini danger" type="submit">断开</button>
+            </form>
+          </td>
+        </tr>
+        <% if (s.status === 'qr' || st.status === 'qr') { %>
+          <tr>
+            <td colspan="5" style="text-align:center;">
+              <img data-role="qr" alt="QR" style="width:220px;height:220px;"
+                   src="<%= st.qr || '' %>">
+              <p class="muted" data-role="qr-hint">二维码会自动刷新 — 打开 WhatsApp → 已链接的设备 → 链接设备</p>
+            </td>
+          </tr>
+        <% } %>
+      <% } %>
+    </table>
+  <% } %>
+</div>
+
+<script>
+  // Poll QR status for sessions that are not yet connected; refresh badge + QR image.
+  (function poll() {
+    const rows = document.querySelectorAll('tr[data-session]');
+    if (!rows.length) return;
+    rows.forEach(function (row) {
+      const name = row.dataset.session;
+      fetch('/api/qr/' + encodeURIComponent(name))
+        .then(function (r) { return r.json(); })
+        .then(function (s) {
+          const badge = row.querySelector('[data-role="status"]');
+          if (badge && s.status) { badge.textContent = s.status; badge.className = 'badge ' + s.status; }
+          const phone = row.querySelector('[data-role="phone"]');
+          if (phone && s.phone) phone.textContent = s.phone;
+          const qrImg = row.parentElement.querySelector('img[data-role="qr"]');
+          if (qrImg && s.qr) qrImg.src = s.qr;
+        })
+        .catch(function () {});
+    });
+    setTimeout(poll, 2000);
+  })();
+</script>
+
+<%- include('partials/foot') %>

@@ -3,7 +3,7 @@
 Source of truth: [`docs/PRD.md`](./PRD.md)
 Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ blocked
 
-**Current sprint:** Sprint 1 — Make it run (M1)
+**Current sprint:** Sprint 2 — Hardening (M2) — not started
 **Last updated:** 2026-09-01
 
 ---
@@ -12,7 +12,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 
 | Milestone | Scope | Status | Progress |
 |---|---|---|---|
-| **M1 — Make it run** | 7 EJS views + layout, README, boot verification | 🔵 in progress | 0/9 |
+| **M1 — Make it run** | 7 EJS views + layout, README, boot verification | ✅ done | 10/10 |
 | **M2 — Hardening** | Basic auth, process manager, reconnect/backoff | ⬜ todo | 0/4 |
 | **M3 — Features** | Media send, bulk + throttle, inbox search, CSV export | ⬜ todo | 0/5 |
 | **M4 — Quality** | Smoke tests, CI, typecheck/lint | ⬜ todo | 0/3 |
@@ -23,18 +23,19 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 
 | # | Task | PRD ref | Status | Notes |
 |---|---|---|---|---|
-| 1.1 | `views/partials/layout.ejs` — shared shell (nav, flash, footer) | 5.1 | ⬜ | header + nav for all 7 pages |
-| 1.2 | `views/overview.ejs` — counters + recent outbox | 5.2 | ⬜ | uses `counts`, `recent` |
-| 1.3 | `views/sessions.ejs` — session list, start/stop, QR modal w/ poller | 5.3 | ⬜ | polls `/api/qr/:name` every 2s |
-| 1.4 | `views/send.ejs` — session/contact/template pickers, template autofill | 5.4 | ⬜ | vanilla JS autofill |
-| 1.5 | `views/scheduled.ejs` — one-shot + cron form, pending list, cancel | 5.5 | ⬜ | recurring → next-run display |
-| 1.6 | `views/templates.ejs` — CRUD list + form | 5.6 | ⬜ | |
-| 1.7 | `views/contacts.ejs` — CRUD list + form | 5.7 | ⬜ | |
-| 1.8 | `views/inbox.ejs` — in/out tabs, per-chat thread view | 5.8 | ⬜ | `?chat=<chat_id>` filter |
-| 1.9 | `README.md` — setup, run, first session, screenshots placeholder | 6 | ⬜ | |
-| 1.10 | **Verify:** boot app, all 7 routes render 200, no EJS errors | 7 | ⬜ | `npm start` + curl smoke |
+| 1.1 | `views/partials/head.ejs` + `foot.ejs` — shared shell (nav, flash, styles) | 5.1 | ✅ | split head/foot (plain EJS, no layout dep) |
+| 1.2 | `views/overview.ejs` — counters + recent outbox | 5.2 | ✅ | uses `counts`, `recent` |
+| 1.3 | `views/sessions.ejs` — session list, start/stop, QR image w/ poller | 5.3 | ✅ | polls `/api/qr/:name` every 2s |
+| 1.4 | `views/send.ejs` — session/contact/template pickers, template autofill | 5.4 | ✅ | vanilla JS autofill |
+| 1.5 | `views/scheduled.ejs` — one-shot + cron form, pending list, cancel | 5.5 | ✅ | recurring → next-run display |
+| 1.6 | `views/templates.ejs` — CRUD list + form | 5.6 | ✅ | |
+| 1.7 | `views/contacts.ejs` — CRUD list + form | 5.7 | ✅ | |
+| 1.8 | `views/inbox.ejs` — in/out lists, per-chat thread view | 5.8 | ✅ | `?chat=<chat_id>` filter |
+| 1.9 | `README.md` — setup, run, first session, security warning | 6 | ✅ | |
+| 1.10 | **Verify:** boot app, all 7 routes render 200, no EJS errors | 7 | ✅ | smoke-tested via curl: all routes 200 + QR API JSON |
 
 **Sprint goal:** app boots and every page renders end-to-end; push to `main`.
+**Outcome:** ✅ Sprint complete — all routes verified rendering (200) with zero EJS errors; QR poller + template autofill wired.
 
 ---
 
@@ -88,5 +89,6 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 
 ## Changelog
 
+- **2026-09-01** — Sprint 1 complete: 7 EJS views + partials + README shipped; all routes verified. M1 done, M2 next.
 - **2026-09-01** — Sprint board created from PRD v1.0. Sprint 1 opened (M1, tasks 1.1–1.10).
 - **2026-09-01** — PRD committed (`bb26918`); repo live at `guntursatya25/wa-corporate-dashboard`.

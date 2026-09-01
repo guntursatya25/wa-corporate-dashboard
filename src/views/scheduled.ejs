@@ -1,0 +1,122 @@
+<%- include('partials/head', { active: 'scheduled' }) %>
+
+<h1>计划消息</h1>
+
+<% if (!sessions.length) { %>
+  <div class="card"><div class="empty">没有在线会话 — 先到 <a href="/sessions">会话</a> 连接一个 WhatsApp 账号</div></div>
+<% } else { %>
+  <div class="card">
+    <h2 style="margin-top:0;">新建计划</h2>
+    <form method="post" action="/scheduled">
+      <div class="row">
+        <div>
+          <label for="session">发送会话</label>
+          <select id="session" name="session" required>
+            <% for (const s of sessions) { %>
+              <option value="<%= s.name %>"><%= s.name %> <%= s.phone ? '(' + s.phone + ')' : '' %></option>
+            <% } %>
+          </select>
+        </div>
+        <div>
+          <label for="template">套用模板（可选）</label>
+          <select id="template" name="template_select">
+            <option value="">— 选择模板 —</option>
+            <% for (const t of templates) { %>
+              <option value="<%= t.id %>" data-body="<%= t.body.replace(/"/g, '&quot;') %>"><%= t.name %></option>
+            <% } %>
+          </select>
+        </div>
+      </div>
+
+      <label for="chat_id">收件人（号码 / chat id）</label>
+      <div class="row">
+        <input id="chat_id" name="chat_id" placeholder="6281234567890" required>
+        <div>
+          <label for="contact_pick" style="margin-top:0;">从联系人选择</label>
+          <select id="contact_pick">
+            <option value="">— 联系人 —</option>
+            <% for (const c of contacts) { %>
+              <option value="<%= c.phone %>"><%= c.name %> (<%= c.phone %>)</option>
+            <% } %>
+          </select>
+        </div>
+      </div>
+
+      <label for="body">消息内容</label>
+      <textarea id="body" name="body" required></textarea>
+
+      <div class="row">
+        <div>
+          <label for="run_at">一次性 — 指定时间</label>
+          <input id="run_at" type="datetime-local" name="run_at">
+        </div>
+        <div>
+          <label for="cron">或循环 — cron 表达式（5 段）</label>
+          <input id="cron" name="cron" placeholder="例如 0 9 * * 1-5（工作日每天 9:00）">
+        </div>
+      </div>
+      <p class="muted">二选一：填了 cron 就忽略指定时间。服务器时间为 UTC。</p>
+
+      <button type="submit">创建计划</button>
+    </form>
+  </div>
+<% } %>
+
+<div class="card">
+  <h2 style="margin-top:0;">待发送 (<%= pending.length %>)</h2>
+  <% if (!pending.length) { %>
+    <div class="empty">没有待发送的计划</div>
+  <% } else { %>
+    <table>
+      <tr><th>执行时间 (UTC)</th><th>会话</th><th>收件人</th><th>内容</th><th>循环</th><th></th></tr>
+      <% for (const s of pending) { %>
+        <tr>
+          <td><%= s.run_at.replace('T', ' ').slice(0, 16) %></td>
+          <td><%= s.session %></td>
+          <td><%= s.chat_id %></td>
+          <td><pre class="body"><%= s.body.length > 60 ? s.body.slice(0, 60) + '…' : s.body %></pre></td>
+          <td><span class="badge <%= s.recurring ? 'pending' : '' %>"><%= s.recurring ? s.cron : '一次性' %></span></td>
+          <td>
+            <form method="post" action="/scheduled/cancel" style="margin:0;">
+              <input type="hidden" name="id" value="<%= s.id %>">
+              <button class="mini secondary" type="submit">取消</button>
+            </form>
+          </td>
+        </tr>
+      <% } %>
+    </table>
+  <% } %>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0;">历史记录</h2>
+  <% if (!history.length) { %>
+    <div class="empty">还没有历史</div>
+  <% } else { %>
+    <table>
+      <tr><th>状态</th><th>执行时间 (UTC)</th><th>会话</th><th>收件人</th><th>内容</th><th>错误</th></tr>
+      <% for (const s of history) { %>
+        <tr>
+          <td><span class="badge <%= s.status %>"><%= s.status %></span></td>
+          <td class="muted"><%= s.last_run_at ? s.last_run_at.replace('T', ' ').slice(0, 16) : '—' %></td>
+          <td><%= s.session %></td>
+          <td><%= s.chat_id %></td>
+          <td><pre class="body"><%= s.body.length > 50 ? s.body.slice(0, 50) + '…' : s.body %></pre></td>
+          <td class="muted"><%= s.last_error || '' %></td>
+        </tr>
+      <% } %>
+    </table>
+  <% } %>
+</div>
+
+<script>
+  document.getElementById('template')?.addEventListener('change', function () {
+    const opt = this.options[this.selectedIndex];
+    if (opt && opt.dataset.body) document.getElementById('body').value = opt.dataset.body;
+  });
+  document.getElementById('contact_pick')?.addEventListener('change', function () {
+    if (this.value) document.getElementById('chat_id').value = this.value;
+  });
+</script>
+
+<%- include('partials/foot') %>

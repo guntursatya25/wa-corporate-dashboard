@@ -1,0 +1,69 @@
+# wa-corporate-dashboard
+
+Corporate WhatsApp dashboard — operate multiple WhatsApp accounts (sessions) from one
+web UI: send ad-hoc & scheduled messages, manage contacts/templates, read inbox history.
+Built on [Baileys](https://github.com/WhiskeySockets/Baileys) (unofficial WhatsApp library) + Express + SQLite.
+
+> ⚠️ **Warning:** Baileys is an unofficial library. Automating a personal WhatsApp account
+> can violate WhatsApp's Terms of Service and lead to a number ban. Use a dedicated number,
+> keep volume reasonable, and avoid spam-like patterns.
+
+## Features
+
+- **Multi-session** — link several WhatsApp accounts; QR login; auto-reconnect; per-session auth stored on disk
+- **Send** — ad-hoc text messages from any connected session (contact picker + template autofill)
+- **Scheduled** — one-shot messages (datetime) or recurring (cron expression), 20s dispatch tick
+- **Templates & Contacts** — reusable message templates, contact book with upsert by phone
+- **Inbox** — inbound/outbound history stored in SQLite; per-chat thread view
+- **Dashboard** — counters + recent outbound at a glance
+
+## Requirements
+
+- Node.js ≥ 20
+- PHP-free, build-free — plain Express + EJS + better-sqlite3
+
+## Setup
+
+```bash
+npm install
+npm start          # or: npm run dev (node --watch)
+```
+
+Open `http://localhost:8300` (override with `PORT` env).
+
+## Link your first WhatsApp session
+
+1. Go to **会话 (Sessions)** → enter a session name (e.g. `sales-1`) → 创建/连接
+2. A QR code appears (auto-refreshing). On the phone: WhatsApp → 已链接的设备 → 链接设备 → scan
+3. Status flips to `connected` and the phone number is shown
+
+Session credentials are stored under `data/baileys/<name>/` and auto-restored on boot.
+
+## Scheduling
+
+- **One-shot:** pick date & time (server time = UTC)
+- **Recurring:** cron expression (5 fields, e.g. `0 9 * * 1-5` = weekdays at 09:00 UTC)
+- Dispatcher runs every 20 seconds; cancel any pending item from the 计划 page
+
+## Project structure
+
+```
+src/
+  server.js      Express routes (7 pages + /api/qr)
+  baileys.js     Multi-session manager (QR login, reconnect, inbox capture)
+  scheduler.js   20s dispatch tick + cron "next run" calculator
+  db.js          SQLite schema + helpers (data/wa.db, WAL mode)
+  views/         EJS pages + partials
+data/            Runtime data — gitignored (WhatsApp creds + wa.db)
+```
+
+## Security notes
+
+- The dashboard has **no authentication yet** (planned: M2 basic auth via env) — do not
+  expose it to the public internet; keep it on localhost/VPN or behind a reverse proxy.
+- `data/` contains WhatsApp credentials — never commit it (already gitignored).
+
+## Docs
+
+- [`docs/PRD.md`](docs/PRD.md) — product requirements
+- [`docs/SPRINT.md`](docs/SPRINT.md) — sprint board / progress

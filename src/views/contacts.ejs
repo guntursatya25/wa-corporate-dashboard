@@ -1,0 +1,48 @@
+<%- include('partials/head', { active: 'contacts' }) %>
+
+<h1>联系人</h1>
+
+<div class="card">
+  <h2 style="margin-top:0;">新增 / 更新联系人</h2>
+  <form method="post" action="/contacts">
+    <div class="row">
+      <div>
+        <label for="name">姓名</label>
+        <input id="name" name="name" placeholder="张三" required>
+      </div>
+      <div>
+        <label for="phone">号码（国际格式，不带 +）</label>
+        <input id="phone" name="phone" placeholder="6281234567890" required>
+      </div>
+    </div>
+    <label for="note">备注（可选）</label>
+    <input id="note" name="note" placeholder="例如 VIP 客户">
+    <button type="submit">保存联系人</button>
+  </form>
+  <p class="muted" style="margin-bottom:0;">同号码会更新姓名和备注。</p>
+</div>
+
+<div class="card">
+  <% if (!contacts.length) { %>
+    <div class="empty">还没有联系人</div>
+  <% } else { %>
+    <table>
+      <tr><th>姓名</th><th>号码</th><th>备注</th><th style="width:80px;"></th></tr>
+      <% for (const c of contacts) { %>
+        <tr>
+          <td><strong><%= c.name %></strong></td>
+          <td><%= c.phone %></td>
+          <td class="muted"><%= c.note || '—' %></td>
+          <td>
+            <form method="post" action="/contacts/delete" style="margin:0;" onsubmit="return confirm('删除联系人 <%= c.name %> ?')">
+              <input type="hidden" name="id" value="<%= c.id %>">
+              <button class="mini danger" type="submit">删除</button>
+            </form>
+          </td>
+        </tr>
+      <% } %>
+    </table>
+  <% } %>
+</div>
+
+<%- include('partials/foot') %>
