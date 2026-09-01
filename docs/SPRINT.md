@@ -1,0 +1,92 @@
+# Sprint Tracking — wa-corporate-dashboard
+
+Source of truth: [`docs/PRD.md`](./PRD.md)
+Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ blocked
+
+**Current sprint:** Sprint 1 — Make it run (M1)
+**Last updated:** 2026-09-01
+
+---
+
+## Milestone burn-down
+
+| Milestone | Scope | Status | Progress |
+|---|---|---|---|
+| **M1 — Make it run** | 7 EJS views + layout, README, boot verification | 🔵 in progress | 0/9 |
+| **M2 — Hardening** | Basic auth, process manager, reconnect/backoff | ⬜ todo | 0/4 |
+| **M3 — Features** | Media send, bulk + throttle, inbox search, CSV export | ⬜ todo | 0/5 |
+| **M4 — Quality** | Smoke tests, CI, typecheck/lint | ⬜ todo | 0/3 |
+
+---
+
+## Sprint 1 — M1: Make it run
+
+| # | Task | PRD ref | Status | Notes |
+|---|---|---|---|---|
+| 1.1 | `views/partials/layout.ejs` — shared shell (nav, flash, footer) | 5.1 | ⬜ | header + nav for all 7 pages |
+| 1.2 | `views/overview.ejs` — counters + recent outbox | 5.2 | ⬜ | uses `counts`, `recent` |
+| 1.3 | `views/sessions.ejs` — session list, start/stop, QR modal w/ poller | 5.3 | ⬜ | polls `/api/qr/:name` every 2s |
+| 1.4 | `views/send.ejs` — session/contact/template pickers, template autofill | 5.4 | ⬜ | vanilla JS autofill |
+| 1.5 | `views/scheduled.ejs` — one-shot + cron form, pending list, cancel | 5.5 | ⬜ | recurring → next-run display |
+| 1.6 | `views/templates.ejs` — CRUD list + form | 5.6 | ⬜ | |
+| 1.7 | `views/contacts.ejs` — CRUD list + form | 5.7 | ⬜ | |
+| 1.8 | `views/inbox.ejs` — in/out tabs, per-chat thread view | 5.8 | ⬜ | `?chat=<chat_id>` filter |
+| 1.9 | `README.md` — setup, run, first session, screenshots placeholder | 6 | ⬜ | |
+| 1.10 | **Verify:** boot app, all 7 routes render 200, no EJS errors | 7 | ⬜ | `npm start` + curl smoke |
+
+**Sprint goal:** app boots and every page renders end-to-end; push to `main`.
+
+---
+
+## Backlog — M2: Hardening
+
+| # | Task | PRD ref | Status | Notes |
+|---|---|---|---|---|
+| 2.1 | Basic auth (env `ADMIN_USER`/`ADMIN_PASS`) on all routes | 4.2 / 9 Q1 | ⬜ | decided: M2 |
+| 2.2 | Process manager (systemd unit or pm2) + docs | 4.2 | ⬜ | |
+| 2.3 | Baileys reconnect backoff + jitter | 4.2 | ⬜ | current: fixed 3s |
+| 2.4 | Log rotation / pino file transport | 4.2 | ⬜ | |
+
+## Backlog — M3: Features
+
+| # | Task | PRD ref | Status | Notes |
+|---|---|---|---|---|
+| 3.1 | Send image/document (upload → Baileys media message) | 4.3 | ⬜ | v1 text-only |
+| 3.2 | Bulk send to contact group + throttle (min interval) | 4.3 | ⬜ | ban-risk guard |
+| 3.3 | Inbox search (body/contact LIKE) + date filter | 4.3 | ⬜ | |
+| 3.4 | CSV export (messages, contacts) | 4.3 | ⬜ | |
+| 3.5 | Timezone handling for `run_at` display + entry | 9 Q2 | ⬜ | decided: M3 |
+
+## Backlog — M4: Quality
+
+| # | Task | PRD ref | Status | Notes |
+|---|---|---|---|---|
+| 4.1 | Boot smoke test (import modules, fake session dir) | 4.4 | ⬜ | |
+| 4.2 | GitHub Actions CI (install + smoke on push) | 4.4 | ⬜ | |
+| 4.3 | Route handler tests w/ supertest (no live WA) | 4.4 | ⬜ | |
+
+---
+
+## Open decisions (from PRD §9)
+
+| Question | Decision | When |
+|---|---|---|
+| Basic auth in M1 or M2? | **M2** | ✅ decided |
+| Timezone for `run_at`? | UTC in DB, local-time UI — M3 | ✅ decided |
+| Multi-user audit? | Deferred to v2 | ⏸ |
+
+## Risks watchlist (from PRD §8)
+
+| Risk | Mitigation | Status |
+|---|---|---|
+| WhatsApp ban (unofficial lib) | throttle in M3, warn in README, low volume | 👁 monitored |
+| Baileys breaking changes | pin `^6.7.9`, check changelog before bump | 👁 monitored |
+| Session creds loss | `data/` backed up manually; note in README | 👁 monitored |
+| Single-process SPOF | systemd auto-restart (M2) | ⬜ |
+
+---
+
+## Changelog
+
+- **2026-09-01** — Sprint board created from PRD v1.0. Sprint 1 opened (M1, tasks 1.1–1.10).
+- **2026-09-01** — PRD committed (`bb26918`); repo live at `guntursatya25/wa-corporate-dashboard`.
