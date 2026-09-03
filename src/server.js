@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const logger = require("./logger");
 const baileys = require("./baileys");
 const store = require("./db");
 const { startScheduler, nextFromCron } = require("./scheduler");
@@ -225,14 +226,14 @@ app.get("/export/:type.csv", (req, res) => {
 async function main() {
   await baileys.restoreSessions();
   startScheduler();
-  app.listen(PORT, () => console.log(`wa-corporate-dashboard on http://localhost:${PORT}`));
+  app.listen(PORT, () => logger.info({ port: PORT }, "wa-corporate-dashboard started"));
 }
 
 module.exports = { app, main };
 
 if (require.main === module) {
   main().catch((e) => {
-    console.error(e);
+    logger.fatal({ err: e }, "Application failed to start");
     process.exit(1);
   });
 }

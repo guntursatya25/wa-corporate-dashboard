@@ -4,13 +4,12 @@
  * Events: credentials.update, connection.update (QR / open / close),
  * messages.upsert (inbox capture -> SQLite).
  */
-const pino = require("pino");
 const path = require("path");
 const fs = require("fs");
 const QRCode = require("qrcode");
+const logger = require("./logger");
 const store = require("./db");
 
-const logger = pino({ level: process.env.LOG_LEVEL || "warn" });
 const reconnectTimers = new Map();
 const reconnectAttempts = new Map();
 const RECONNECT_BASE_MS = 3000;
@@ -98,7 +97,7 @@ async function startSession(name, { onStatus = () => {} } = {}) {
         const timer = setTimeout(() => {
           reconnectTimers.delete(name);
           startSession(name, { onStatus }).catch((e) =>
-            console.error(`reconnect ${name}:`, e.message)
+            logger.error({ err: e, session: name }, "Session reconnect failed")
           );
         }, delay);
         reconnectTimers.set(name, timer);
@@ -169,7 +168,7 @@ async function sendText(name, chatId, body) {
 async function restoreSessions() {
   for (const name of fs.readdirSync(sessionsDir)) {
     if (fs.existsSync(path.join(sessionsDir, name, "creds.json"))) {
-      await startSession(name).catch((e) => console.error(`restore ${name}:`, e.message));
+      await startSession(name).catch((e) => logger.error({ err: e, session: name }, "Session restore failed"));
     }
   }
 }

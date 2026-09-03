@@ -57,7 +57,7 @@
       </div>
       <p class="muted">Choose one: cron takes precedence over the specified time. Input and display use <strong><%= timezone %></strong>; the database stores UTC.</p>
 
-      <button type="submit">Create schedule</button>
+      <button type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-clock"></use></svg>Create schedule</button>
     </form>
   </div>
 <% } %>
@@ -79,7 +79,7 @@
           <td>
             <form method="post" action="/scheduled/cancel" style="margin:0;">
               <input type="hidden" name="id" value="<%= s.id %>">
-              <button class="mini secondary" type="submit">Cancel</button>
+              <button class="mini secondary" type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-x"></use></svg>Cancel</button>
             </form>
           </td>
         </tr>

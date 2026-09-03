@@ -124,7 +124,7 @@ Auth state on disk: data/baileys/<name>/creds.json (gitignored)
   HTTP basic auth via env (`DASH_USER`/`DASH_PASS`) — *v1.5 item, noted in PRD*.
 - **Data safety:** `data/` gitignored (WhatsApp creds + DB never in git).
 - **Reliability:** Baileys auto-reconnect on non-loggedOut disconnects (3s backoff) — done.
-- **Logging:** pino at `warn` for Baileys internals; console for app-level errors.
+- **Logging:** shared Pino logger; development/test logs go to the terminal, while production logs go only to `LOG_FILE` (default `logs/app.log`).
 
 ---
 

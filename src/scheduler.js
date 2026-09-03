@@ -3,6 +3,7 @@
  * A 20s tick scans `scheduled` for due rows and dispatches them.
  */
 const cron = require("node-cron");
+const logger = require("./logger");
 const store = require("./db");
 const baileys = require("./baileys");
 
@@ -64,7 +65,7 @@ function startScheduler() {
       const due = store.dueScheduled(new Date().toISOString());
       for (const row of due) await dispatch(row);
     } catch (e) {
-      console.error("scheduler tick:", e.message);
+      logger.error({ err: e }, "Scheduler tick failed");
     }
   };
   setInterval(tick, 20 * 1000);

@@ -31,6 +31,20 @@ npm start          # or: npm run dev (node --watch)
 
 Open `http://localhost:8300` (override with `PORT` env).
 
+### Logging
+
+Logging follows `NODE_ENV`:
+
+- Development and test: Pino logs go to the terminal.
+- Production: Pino logs go only to `LOG_FILE`, defaulting to `logs/app.log`.
+- `LOG_LEVEL` defaults to `debug` outside production and `info` in production.
+
+You can override the production destination explicitly:
+
+```bash
+NODE_ENV=production LOG_FILE=/var/log/wa-corporate/app.log npm start
+```
+
 ### Production with PM2
 
 Install PM2 once, then run the included process configuration:
@@ -42,7 +56,7 @@ pm2 save
 pm2 startup
 ```
 
-PM2 restarts the app after crashes and writes timestamped stdout/stderr logs to `logs/`. Keep `logs/` on a filesystem with enough capacity and review it periodically; rotate or purge old files according to your host policy.
+PM2 restarts the app after crashes. In production, application logs are written to `logs/app.log` and do not stream to the terminal. Set `LOG_FILE` to override the path and `LOG_LEVEL` to control verbosity. PM2 fallback output is kept in `logs/pm2-out.log` and `logs/pm2-error.log`. Keep `logs/` on a filesystem with enough capacity and rotate or purge old files according to your host policy.
 
 ## Link your first WhatsApp session
 

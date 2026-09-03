@@ -46,7 +46,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 | 2.1 | Basic auth (env `ADMIN_USER`/`ADMIN_PASS`) on all routes | 4.2 / 9 Q1 | ✅ | Optional; both variables required together; invalid credentials return 401 |
 | 2.2 | Process manager (systemd unit or pm2) + docs | 4.2 | ✅ | PM2 ecosystem config and README instructions |
 | 2.3 | Baileys reconnect backoff + jitter | 4.2 | ✅ | Capped exponential backoff with jitter |
-| 2.4 | Log rotation / pino file transport | 4.2 | ✅ | PM2 timestamped stdout/stderr files documented |
+| 2.4 | Environment-aware pino file transport | 4.2 | ✅ | Development logs use terminal; production logs use `LOG_FILE` |
 
 ## Backlog — M3: Features
 

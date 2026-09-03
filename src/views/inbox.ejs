@@ -9,17 +9,17 @@
       <div><label for="from">From date</label><input id="from" type="date" name="from" value="<%= filters?.from || '' %>"></div>
       <div><label for="to">To date</label><input id="to" type="date" name="to" value="<%= filters?.to || '' %>"></div>
     </div>
-    <button type="submit">Search</button>
-    <a class="button-link" href="/inbox">Clear</a>
-    <a class="button-link" href="/export/messages.csv">Export messages CSV</a>
-    <a class="button-link" href="/export/contacts.csv">Export contacts CSV</a>
+    <button type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-search"></use></svg>Search</button>
+    <a class="button-link secondary" href="/inbox"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-x"></use></svg>Clear</a>
+    <a class="button-link secondary" href="/export/messages.csv"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-download"></use></svg>Export messages CSV</a>
+    <a class="button-link secondary" href="/export/contacts.csv"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-download"></use></svg>Export contacts CSV</a>
   </form>
 </div>
 
 <% if (chat) { %>
   <div class="card">
     <h2 style="margin-top:0;">Chat: <%= chat_id %></h2>
-    <a href="/inbox" class="muted">← Back to all messages</a>
+    <a href="/inbox" class="button-link muted-link"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-inbox"></use></svg>Back to all messages</a>
     <div style="margin-top:12px;">
       <% for (const m of chat) { %>
         <div style="margin-bottom:10px; <%= m.direction === 'out' ? 'text-align:right;' : '' %>">

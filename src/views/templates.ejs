@@ -9,7 +9,7 @@
     <input id="name" name="name" placeholder="e.g. payment-reminder" required>
     <label for="body">Message</label>
     <textarea id="body" name="body" required placeholder="Template text…"></textarea>
-    <button type="submit">Save template</button>
+    <button type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-save"></use></svg>Save template</button>
   </form>
 </div>
 
@@ -27,7 +27,7 @@
           <td>
             <form method="post" action="/templates/delete" style="margin:0;" onsubmit="return confirm('Delete template <%= t.name %> ?')">
               <input type="hidden" name="id" value="<%= t.id %>">
-              <button class="mini danger" type="submit">Delete</button>
+              <button class="mini danger" type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-trash"></use></svg>Delete</button>
             </form>
           </td>
         </tr>

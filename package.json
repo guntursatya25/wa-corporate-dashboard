@@ -7,9 +7,11 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "test": "node test/smoke.js",
-    "check": "node --check src/server.js && node --check src/db.js && node --check src/baileys.js && node --check src/scheduler.js && npm test"
+    "check": "node --check src/logger.js && node --check src/server.js && node --check src/db.js && node --check src/baileys.js && node --check src/scheduler.js && npm test"
   },
-  "engines": { "node": ">=24 <25" },
+  "engines": {
+    "node": ">=24 <25"
+  },
   "dependencies": {
     "@whiskeysockets/baileys": "^7.0.0-rc.14",
     "ejs": "^6.0.1",
