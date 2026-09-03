@@ -109,11 +109,11 @@ several personal phones.
 Browser ── EJS pages ── Express (server.js)
                           ├─ baileys.js  ── WhatsApp (multi-socket, one per session)
                           ├─ scheduler.js ── 20s tick → dueScheduled → sendText
-                          └─ db.js ── better-sqlite3 (data/wa.db, WAL)
+                          └─ db.js ── Node.js built-in SQLite (data/wa.db, WAL)
 Auth state on disk: data/baileys/<name>/creds.json (gitignored)
 ```
 
-- Node ≥ 20, CommonJS, no TypeScript, no bundler.
+- Node 24, CommonJS, built-in node:sqlite, no TypeScript, no bundler.
 - Ports: `PORT` env or 8300.
 
 ---

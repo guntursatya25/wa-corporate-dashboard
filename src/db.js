@@ -1,13 +1,12 @@
-const Database = require("better-sqlite3");
+const { DatabaseSync } = require("node:sqlite");
 const path = require("path");
 const fs = require("fs");
 
 const dataDir = path.join(__dirname, "..", "data");
 fs.mkdirSync(dataDir, { recursive: true });
 
-const db = new Database(process.env.WA_DB_PATH || path.join(dataDir, "wa.db"));
-db.pragma("journal_mode = WAL");
-db.pragma("foreign_keys = ON");
+const db = new DatabaseSync(process.env.WA_DB_PATH || path.join(dataDir, "wa.db"));
+db.exec("PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;");
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS contacts (

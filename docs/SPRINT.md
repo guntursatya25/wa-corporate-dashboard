@@ -63,7 +63,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 | # | Task | PRD ref | Status | Notes |
 |---|---|---|---|---|
 | 4.1 | Boot smoke test (import modules, fake session dir) | 4.4 | ✅ | Dependency-free module and helper smoke coverage |
-| 4.2 | GitHub Actions CI (install + smoke on push) | 4.4 | ✅ | Node 20 workflow runs `npm run check` |
+| 4.2 | GitHub Actions CI (install + smoke on push) | 4.4 | ✅ | Node 24 workflow runs `npm run check` |
 | 4.3 | Route handler tests w/ supertest (no live WA) | 4.4 | ⬜ | |
 
 ---
@@ -81,7 +81,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 | Risk | Mitigation | Status |
 |---|---|---|
 | WhatsApp ban (unofficial lib) | throttle in M3, warn in README, low volume | 👁 monitored |
-| Baileys breaking changes | pin `^6.7.9`, check changelog before bump | 👁 monitored |
+| Baileys breaking changes | pin the Baileys release, check changelog before bump | 👁 monitored |
 | Session creds loss | `data/` backed up manually; note in README | 👁 monitored |
 | Single-process SPOF | systemd auto-restart (M2) | ⬜ |
 

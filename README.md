@@ -19,8 +19,8 @@ Built on [Baileys](https://github.com/WhiskeySockets/Baileys) (unofficial WhatsA
 
 ## Requirements
 
-- Node.js ≥ 20
-- PHP-free, build-free — plain Express + EJS + better-sqlite3
+- Node.js 24
+- PHP-free, build-free — plain Express + EJS + Node.js built-in SQLite
 
 ## Setup
 
@@ -65,7 +65,7 @@ src/
   server.js      Express routes (7 pages + /api/qr)
   baileys.js     Multi-session manager (QR login, reconnect with backoff, inbox capture)
   scheduler.js   20s dispatch tick + cron "next run" calculator
-  db.js          SQLite schema + helpers (data/wa.db, WAL mode)
+  db.js          SQLite schema + helpers (Node.js built-in SQLite, data/wa.db, WAL mode)
   views/         EJS pages + partials
 data/            Runtime data — gitignored (WhatsApp creds + wa.db)
 ```
