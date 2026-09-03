@@ -84,6 +84,8 @@ module.exports = {
       `INSERT INTO templates (name, body) VALUES (?, ?)
        ON CONFLICT(name) DO UPDATE SET body=excluded.body`
     ).run(name, body),
+  updateTemplate: (id, name, body) =>
+    db.prepare("UPDATE templates SET name=?, body=? WHERE id=?").run(name, body, id),
   deleteTemplate: (id) => db.prepare("DELETE FROM templates WHERE id = ?").run(id),
 
   // messages

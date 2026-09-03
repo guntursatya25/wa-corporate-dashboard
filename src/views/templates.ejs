@@ -3,10 +3,13 @@
 <h1>Message templates</h1>
 
 <div class="card">
-  <h2 style="margin-top:0;">Add / update template</h2>
+  <h2 style="margin-top:0;"><%= editTemplate ? 'Edit template' : 'Add template' %></h2>
   <form method="post" action="/templates">
+    <% if (editTemplate) { %>
+      <input type="hidden" name="id" value="<%= editTemplate.id %>">
+    <% } %>
     <label for="name">Template name (same name overwrites)</label>
-    <input id="name" name="name" placeholder="e.g. payment-reminder" required>
+    <input id="name" name="name" value="<%= editTemplate?.name || '' %>" placeholder="e.g. payment-reminder" required>
     <label for="body">Message</label>
     <div class="message-editor" data-message-editor>
         <div class="message-toolbar" role="toolbar" aria-label="Message formatting">
@@ -16,9 +19,16 @@
           <span class="format-divider" aria-hidden="true"></span>
           <button type="button" class="format-button" data-format="code" title="Monospace" aria-label="Monospace"><svg class="icon" aria-hidden="true"><use href="#icon-code"></use></svg></button>
         </div>
-        <textarea id="body" name="body" required placeholder="Template text…"></textarea>
+        <textarea id="body" name="body" required placeholder="Template text…"><%= editTemplate?.body || '' %></textarea>
       </div>
-    <button type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-save"></use></svg>Save template</button>
+    <div class="template-preview" aria-live="polite">
+      <div class="preview-label">Live preview</div>
+      <div class="preview-body" data-message-preview>Start typing to preview your WhatsApp message.</div>
+    </div>
+    <button type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-save"></use></svg><%= editTemplate ? 'Update template' : 'Save template' %></button>
+    <% if (editTemplate) { %>
+      <a class="button-link secondary" href="/templates"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-x"></use></svg>Cancel edit</a>
+    <% } %>
   </form>
 </div>
 
@@ -27,12 +37,13 @@
     <div class="empty">No templates yet</div>
   <% } else { %>
     <table>
-      <tr><th>Name</th><th>Message</th><th>Created</th><th style="width:80px;"></th></tr>
+      <tr><th>Name</th><th>Message</th><th>Created</th><th></th><th style="width:80px;"></th></tr>
       <% for (const t of templates) { %>
         <tr>
           <td><strong><%= t.name %></strong></td>
           <td><pre class="body"><%= t.body %></pre></td>
           <td class="muted"><%= t.created_at %></td>
+          <td><a class="button-link secondary mini" href="/templates?edit=<%= t.id %>"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-file"></use></svg>Edit</a></td>
           <td>
             <form method="post" action="/templates/delete" style="margin:0;" onsubmit="return confirm('Delete template <%= t.name %> ?')">
               <input type="hidden" name="id" value="<%= t.id %>">
@@ -44,5 +55,7 @@
     </table>
   <% } %>
 </div>
+
+
 
 <%- include('partials/foot') %>

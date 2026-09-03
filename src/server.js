@@ -162,16 +162,25 @@ app.post("/scheduled/cancel", (req, res) => {
 
 // ---------- templates ----------
 app.get("/templates", (req, res) => {
+  const editId = req.query.edit ? Number(req.query.edit) : null;
+  const editTemplate = editId ? store.getTemplate(editId) : null;
   res.render("templates", {
     templates: store.listTemplates(),
+    editTemplate,
     flash: req.query.msg ? flash(req.query.msg, req.query.kind || "ok") : null,
   });
 });
 
 app.post("/templates", (req, res) => {
-  const { name, body } = req.body;
+  const { id, name, body } = req.body;
   if (!name?.trim() || !body?.trim()) return res.redirect("/templates?msg=Name+and+body+required&kind=err");
-  store.upsertTemplate(name.trim(), body);
+  if (id) {
+    const existing = store.getTemplate(Number(id));
+    if (!existing) return res.redirect("/templates?msg=Template+not+found&kind=err");
+    store.updateTemplate(Number(id), name.trim(), body);
+  } else {
+    store.upsertTemplate(name.trim(), body);
+  }
   res.redirect("/templates?msg=Template+saved");
 });
 
