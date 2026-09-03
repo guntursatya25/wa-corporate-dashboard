@@ -4,13 +4,6 @@
  * Events: credentials.update, connection.update (QR / open / close),
  * messages.upsert (inbox capture -> SQLite).
  */
-const makeWASocket = require("@whiskeysockets/baileys").default;
-const {
-  useMultiFileAuthState,
-  DisconnectReason,
-  fetchLatestBaileysVersion,
-  makeCacheableSignalKeyStore,
-} = require("@whiskeysockets/baileys");
 const pino = require("pino");
 const path = require("path");
 const fs = require("fs");
@@ -49,6 +42,12 @@ function listSessions() {
 
 async function startSession(name, { onStatus = () => {} } = {}) {
   if (sessions.has(name)) return sessionState(name);
+  const {
+    default: makeWASocket,
+    useMultiFileAuthState,
+    DisconnectReason,
+    makeCacheableSignalKeyStore,
+  } = await import("@whiskeysockets/baileys");
   const pendingTimer = reconnectTimers.get(name);
   if (pendingTimer) {
     clearTimeout(pendingTimer);
@@ -57,10 +56,7 @@ async function startSession(name, { onStatus = () => {} } = {}) {
   const authDir = path.join(sessionsDir, name);
   fs.mkdirSync(authDir, { recursive: true });
   const { state, saveCreds } = await useMultiFileAuthState(authDir);
-  const { version } = await fetchLatestBaileysVersion();
-
   const sock = makeWASocket({
-    version,
     auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, logger) },
     printQRInTerminal: false,
     logger,
