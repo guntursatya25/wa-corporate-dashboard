@@ -14,7 +14,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 |---|---|---|---|
 | **M1 — Make it run** | 7 EJS views + layout, README, boot verification | ✅ done | 10/10 |
 | **M2 — Hardening** | Basic auth, process manager, reconnect/backoff | ✅ done | 4/4 |
-| **M3 — Features** | Media send, bulk + throttle, inbox search, CSV export | 🔵 in progress | 2/5 |
+| **M3 — Features** | Media send, contact groups/bulk send, inbox search, CSV import/export | 🔵 in progress | 4/5 |
 | **M4 — Quality** | Smoke tests, CI, typecheck/lint | 🔵 in progress | 2/3 |
 
 ---
@@ -53,9 +53,9 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 | # | Task | PRD ref | Status | Notes |
 |---|---|---|---|---|
 | 3.1 | Send image/document (upload → Baileys media message) | 4.3 | ⬜ | v1 text-only |
-| 3.2 | Bulk send to contact group + throttle (min interval) | 4.3 | ⬜ | ban-risk guard |
+| 3.2 | Contact groups + sequential bulk send | 4.3 | ✅ | many-to-many membership; failed recipients do not stop the batch |
 | 3.3 | Inbox search (body/contact LIKE) + date filter | 4.3 | ✅ | Keyword and inclusive date filters on inbox |
-| 3.4 | CSV export (messages, contacts) | 4.3 | ✅ | CSV download routes from inbox |
+| 3.4 | CSV import/export (contacts, messages) | 4.3 | ✅ | contact import uses name/phone headers; exports include group names |
 | 3.5 | Timezone handling for `run_at` display + entry | 9 Q2 | ✅ | Local UI timezone via `TZ`; UTC persisted in DB |
 
 ## Backlog — M4: Quality
@@ -92,6 +92,7 @@ Status legend: ✅ done · 🔵 in progress · ⬜ todo · ⏸ deferred · ❌ b
 - **2026-09-01** — M4 tasks 4.1–4.2 complete: dependency-free smoke test and GitHub Actions CI added. M4 progress 2/3.
 - **2026-09-01** — M3 task 3.5 complete: scheduled times now use configured local timezone in the UI and UTC in storage. M3 progress 3/5.
 - **2026-09-01** — M2 complete: PM2 config/docs, reconnect backoff+jitter, and operational log handling documented. M2 progress 4/4.
+- **2026-09-03** — M3 contact groups, sequential group sending, and contact CSV import/export added. M3 progress 4/5.
 - **2026-09-01** — M3 tasks 3.3–3.4 complete: inbox search/date filters and messages/contacts CSV exports added. M3 progress 2/5.
 - **2026-09-01** — M2 task 2.1 complete: optional HTTP Basic Auth added; README updated. M2 progress 1/4.
 - **2026-09-01** — Sprint 1 complete: 7 EJS views + partials + README shipped; all routes verified. M1 done, M2 next.

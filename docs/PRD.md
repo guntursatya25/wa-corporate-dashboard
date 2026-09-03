@@ -68,7 +68,9 @@ several personal phones.
 
 ### 4.3 Send (`GET/POST /send`)
 - Pick session (only `connected`), pick contact (dropdown from contacts OR free-text chat_id),
-  template dropdown auto-fills body (client-side JS), message textarea.
+  or select a dashboard contact group for sequential delivery to every member.
+- Template dropdown auto-fills body (client-side JS), message textarea supports WhatsApp formatting.
+- Group sends continue after individual failures and redirect with sent/failed counts.
 - POST → `baileys.sendText` → redirect with success/error flash.
 - Acceptance: send to a real number; message appears in inbox/outbox and on the phone.
 
@@ -81,14 +83,21 @@ several personal phones.
 ### 4.5 Templates (`GET/POST /templates`, delete)
 - CRUD-ish: upsert by unique name, delete. Used by Send & Scheduled pages.
 
-### 4.6 Contacts (`GET/POST /contacts`, delete)
+### 4.6 Contacts and groups (`GET/POST /contacts`, groups, import/export)
 - name + phone (unique, upsert) + note. Used by Send & Scheduled chat_id pickers.
+- Contacts can belong to multiple named dashboard groups through a many-to-many membership table.
+- Create/delete groups, assign groups when saving contacts, and import a `name,phone` CSV into an optional group.
+- Export contacts as CSV with `name,phone,note,groups` columns.
 
-### 4.7 Inbox (`GET /inbox`)
+### 4.7 Group messaging (`POST /send`)
+- Select a contact group instead of an individual recipient and send the message sequentially to each member.
+- A failed recipient does not stop the remaining sends; the result redirects with sent/failed counts and failed numbers.
+
+### 4.8 Inbox (`GET /inbox`)
 - Two columns: inbound (200) and outbound (200); clicking a chat filters `listChat(chatId)`.
 - Acceptance: receive a WhatsApp message → appears in inbound within seconds (Baileys upsert).
 
-### 4.8 API (already exists, keep stable)
+### 4.9 API (already exists, keep stable)
 - `GET /api/qr/:name` → `{status, qr, phone}` — used by the sessions page poller.
 
 ---
@@ -145,7 +154,7 @@ Auth state on disk: data/baileys/<name>/creds.json (gitignored)
 
 ### M3 — Feature growth (P2)
 - Media send (image/file) via Baileys; media inbox preview.
-- Bulk send to a contact group with per-recipient throttle (anti-ban).
+- Add a configurable delay/throttle to contact-group broadcasts.
 - Chat labels/tags, simple search in inbox.
 - Export CSV of messages/scheduled.
 

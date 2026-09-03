@@ -11,10 +11,10 @@ Built on [Baileys](https://github.com/WhiskeySockets/Baileys) (unofficial WhatsA
 ## Features
 
 - **Multi-session** — link several WhatsApp accounts; QR login; auto-reconnect; per-session auth stored on disk
-- **Send** — ad-hoc text messages from any connected session (contact picker + template autofill)
+- **Send** — ad-hoc text messages from any connected session (contact picker + template autofill), or sequentially to a contact group
 - **Scheduled** — one-shot messages (local timezone input, UTC storage) or recurring (cron expression), 20s dispatch tick
-- **Templates & Contacts** — reusable message templates, contact book with upsert by phone
-- **Inbox** — inbound/outbound history stored in SQLite; per-chat thread view; keyword/date search and CSV exports
+- **Templates & Contacts** — reusable message templates, contact book with upsert by phone, many-to-many contact groups, and CSV import/export
+- **Inbox** — inbound/outbound history stored in SQLite; per-chat thread view; keyword/date search and CSV exports for messages and contacts
 - **Dashboard** — counters + recent outbound at a glance
 
 ## Requirements
@@ -38,6 +38,20 @@ Logging follows `NODE_ENV`:
 - Development and test: Pino logs go to the terminal.
 - Production: Pino logs go only to `LOG_FILE`, defaulting to `logs/app.log`.
 - `LOG_LEVEL` defaults to `debug` outside production and `info` in production.
+
+### Contact groups and CSV
+
+Create named contact groups from **Contacts**, assign each contact to one or more groups, then choose a group from **Send** to deliver a message sequentially to every member. A failed recipient is reported without stopping the remaining sends.
+
+Contact imports use a header row with `name,phone`, for example:
+
+```csv
+name,phone
+Alex Smith,6281234567890
+Jordan Lee,+6281234567891
+```
+
+Choose a target group during import if needed. Existing phone numbers are updated instead of duplicated. Contact exports include `name,phone,note,groups` and can be used as a backup.
 
 You can override the production destination explicitly:
 

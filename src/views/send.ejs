@@ -27,18 +27,41 @@
         </div>
       </div>
 
-      <label for="chat_id">Recipient (phone / chat ID)</label>
-      <div class="row">
-        <input id="chat_id" name="chat_id" placeholder="6281234567890 or 62812…@g.us" required>
-        <div>
-          <label for="contact_pick" style="margin-top:0;">Choose from contacts</label>
-          <select id="contact_pick">
-            <option value="">— Contacts —</option>
-            <% for (const c of contacts) { %>
-              <option value="<%= c.phone %>" data-name="<%= c.name %>"><%= c.name %> (<%= c.phone %>)</option>
-            <% } %>
-          </select>
+      <label for="send-mode">Recipients</label>
+      <select id="send-mode" name="send_mode">
+        <option value="individual">One contact or chat ID</option>
+        <option value="group">Contact group</option>
+      </select>
+
+      <div id="individual-target">
+        <label for="chat_id">Recipient (phone / chat ID)</label>
+        <div class="row">
+          <input id="chat_id" name="chat_id" placeholder="6281234567890 or 62812…@g.us" required>
+          <div>
+            <label for="contact_pick" style="margin-top:0;">Choose from contacts</label>
+            <select id="contact_pick">
+              <option value="">— Contacts —</option>
+              <% for (const c of contacts) { %>
+                <option value="<%= c.phone %>" data-name="<%= c.name %>"><%= c.name %> (<%= c.phone %>)</option>
+              <% } %>
+            </select>
+          </div>
         </div>
+      </div>
+
+      <div id="group-target" hidden>
+        <label for="group_id">Contact group</label>
+        <select id="group_id" name="group_id">
+          <option value="">— Choose group —</option>
+          <% for (const group of groups) { %>
+            <option value="<%= group.id %>"><%= group.name %> (<%= group.member_count %> contacts)</option>
+          <% } %>
+        </select>
+        <% if (!groups.length) { %>
+          <p class="muted">No groups yet. Create one from <a href="/contacts">Contacts</a>.</p>
+        <% } else { %>
+          <p class="muted">The message will be sent one contact at a time. Failed recipients will not stop the remaining sends.</p>
+        <% } %>
       </div>
 
       <label for="body">Message</label>
@@ -57,18 +80,32 @@
         <div class="preview-body" data-message-preview>Start typing to preview your WhatsApp message.</div>
       </div>
 
-      <button type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-send"></use></svg>Send</button>
+      <button type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-send"></use></svg>Send message</button>
     </form>
   </div>
 <% } %>
 
 <script>
-  // Template autofill: put template body into the textarea.
+  const sendMode = document.getElementById('send-mode');
+  const individualTarget = document.getElementById('individual-target');
+  const groupTarget = document.getElementById('group-target');
+  const chatInput = document.getElementById('chat_id');
+  const groupInput = document.getElementById('group_id');
+  function updateRecipientMode() {
+    const isGroup = sendMode?.value === 'group';
+    if (individualTarget) individualTarget.hidden = isGroup;
+    if (groupTarget) groupTarget.hidden = !isGroup;
+    if (chatInput) chatInput.required = !isGroup;
+    if (groupInput) groupInput.required = isGroup;
+  }
+  sendMode?.addEventListener('change', updateRecipientMode);
+  updateRecipientMode();
+
   document.getElementById('template')?.addEventListener('change', function () {
     const opt = this.options[this.selectedIndex];
     if (opt && opt.dataset.body) document.getElementById('body').value = opt.dataset.body;
+    document.getElementById('body')?.dispatchEvent(new Event('input', { bubbles: true }));
   });
-  // Contact picker: fill chat_id with the selected contact's phone.
   document.getElementById('contact_pick')?.addEventListener('change', function () {
     if (this.value) document.getElementById('chat_id').value = this.value;
   });
