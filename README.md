@@ -46,8 +46,8 @@ PM2 restarts the app after crashes and writes timestamped stdout/stderr logs to 
 
 ## Link your first WhatsApp session
 
-1. Go to **会话 (Sessions)** → enter a session name (e.g. `sales-1`) → 创建/连接
-2. A QR code appears (auto-refreshing). On the phone: WhatsApp → 已链接的设备 → 链接设备 → scan
+1. Go to **Sessions** → enter a session name (e.g. `sales-1`) → Create/connect
+2. A QR code appears (auto-refreshing). On the phone: WhatsApp → Linked devices → Link a device → scan
 3. Status flips to `connected` and the phone number is shown
 
 Session credentials are stored under `data/baileys/<name>/` and auto-restored on boot.
@@ -56,7 +56,7 @@ Session credentials are stored under `data/baileys/<name>/` and auto-restored on
 
 - **One-shot:** pick date & time in the configured server timezone (`TZ`, default system timezone); values are stored as UTC
 - **Recurring:** cron expression (5 fields, e.g. `0 9 * * 1-5` = weekdays at 09:00 in the server timezone)
-- Dispatcher runs every 20 seconds; cancel any pending item from the 计划 page
+- Dispatcher runs every 20 seconds; cancel any pending item from the Scheduled page
 
 ## Project structure
 

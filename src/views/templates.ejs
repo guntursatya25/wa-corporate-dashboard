@@ -1,33 +1,33 @@
 <%- include('partials/head', { active: 'templates' }) %>
 
-<h1>消息模板</h1>
+<h1>Message templates</h1>
 
 <div class="card">
-  <h2 style="margin-top:0;">新建 / 更新模板</h2>
+  <h2 style="margin-top:0;">Add / update template</h2>
   <form method="post" action="/templates">
-    <label for="name">模板名称（同名会覆盖）</label>
-    <input id="name" name="name" placeholder="例如 payment-reminder" required>
-    <label for="body">内容</label>
-    <textarea id="body" name="body" required placeholder="模板正文…"></textarea>
-    <button type="submit">保存模板</button>
+    <label for="name">Template name (same name overwrites)</label>
+    <input id="name" name="name" placeholder="e.g. payment-reminder" required>
+    <label for="body">Message</label>
+    <textarea id="body" name="body" required placeholder="Template text…"></textarea>
+    <button type="submit">Save template</button>
   </form>
 </div>
 
 <div class="card">
   <% if (!templates.length) { %>
-    <div class="empty">还没有模板</div>
+    <div class="empty">No templates yet</div>
   <% } else { %>
     <table>
-      <tr><th>名称</th><th>内容</th><th>创建时间</th><th style="width:80px;"></th></tr>
+      <tr><th>Name</th><th>Message</th><th>Created</th><th style="width:80px;"></th></tr>
       <% for (const t of templates) { %>
         <tr>
           <td><strong><%= t.name %></strong></td>
           <td><pre class="body"><%= t.body %></pre></td>
           <td class="muted"><%= t.created_at %></td>
           <td>
-            <form method="post" action="/templates/delete" style="margin:0;" onsubmit="return confirm('删除模板 <%= t.name %> ?')">
+            <form method="post" action="/templates/delete" style="margin:0;" onsubmit="return confirm('Delete template <%= t.name %> ?')">
               <input type="hidden" name="id" value="<%= t.id %>">
-              <button class="mini danger" type="submit">删除</button>
+              <button class="mini danger" type="submit">Delete</button>
             </form>
           </td>
         </tr>

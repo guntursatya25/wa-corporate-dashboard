@@ -1,21 +1,21 @@
 <%- include('partials/head', { active: 'overview' }) %>
 
-<h1>总览</h1>
+<h1>Overview</h1>
 
 <div class="grid">
-  <div class="stat"><div class="num"><%= sessions.filter(s => s.status === 'connected').length %>/<%= sessions.length %></div><div class="lbl">会话在线</div></div>
-  <div class="stat"><div class="num"><%= counts.contacts %></div><div class="lbl">联系人</div></div>
-  <div class="stat"><div class="num"><%= counts.templates %></div><div class="lbl">模板</div></div>
-  <div class="stat"><div class="num"><%= counts.pending %></div><div class="lbl">待发送计划</div></div>
+  <div class="stat"><div class="num"><%= sessions.filter(s => s.status === 'connected').length %>/<%= sessions.length %></div><div class="lbl">Online sessions</div></div>
+  <div class="stat"><div class="num"><%= counts.contacts %></div><div class="lbl">Contacts</div></div>
+  <div class="stat"><div class="num"><%= counts.templates %></div><div class="lbl">Templates</div></div>
+  <div class="stat"><div class="num"><%= counts.pending %></div><div class="lbl">Pending scheduled</div></div>
 </div>
 
 <div class="card" style="margin-top:16px;">
-  <h2 style="margin-top:0;">最近发送</h2>
+  <h2 style="margin-top:0;">Recent sends</h2>
   <% if (!recent.length) { %>
-    <div class="empty">还没有发送记录 — 去 <a href="/send">发送</a> 页面发第一条消息</div>
+    <div class="empty">No messages sent yet - go to <a href="/send">Send</a> to send your first message</div>
   <% } else { %>
     <table>
-      <tr><th>时间</th><th>会话</th><th>收件人</th><th>内容</th></tr>
+      <tr><th>Time</th><th>Session</th><th>Recipient</th><th>Message</th></tr>
       <% for (const m of recent) { %>
         <tr>
           <td class="muted"><%= m.created_at %></td>

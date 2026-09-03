@@ -1,15 +1,15 @@
 <%- include('partials/head', { active: 'send' }) %>
 
-<h1>发送消息</h1>
+<h1>Send message</h1>
 
 <% if (!sessions.length) { %>
-  <div class="card"><div class="empty">没有在线会话 — 先到 <a href="/sessions">会话</a> 连接一个 WhatsApp 账号</div></div>
+  <div class="card"><div class="empty">No online sessions - go to <a href="/sessions">Sessions</a> to connect a WhatsApp account</div></div>
 <% } else { %>
   <div class="card">
     <form method="post" action="/send">
       <div class="row">
         <div>
-          <label for="session">发送会话</label>
+          <label for="session">Sending session</label>
           <select id="session" name="session" required>
             <% for (const s of sessions) { %>
               <option value="<%= s.name %>"><%= s.name %> <%= s.phone ? '(' + s.phone + ')' : '' %></option>
@@ -17,9 +17,9 @@
           </select>
         </div>
         <div>
-          <label for="template">套用模板（可选）</label>
+          <label for="template">Use template (optional)</label>
           <select id="template" name="template_select">
-            <option value="">— 选择模板 —</option>
+            <option value="">— Choose template —</option>
             <% for (const t of templates) { %>
               <option value="<%= t.id %>" data-body="<%= t.body.replace(/"/g, '&quot;') %>"><%= t.name %></option>
             <% } %>
@@ -27,13 +27,13 @@
         </div>
       </div>
 
-      <label for="chat_id">收件人（号码 / chat id）</label>
+      <label for="chat_id">Recipient (phone / chat ID)</label>
       <div class="row">
-        <input id="chat_id" name="chat_id" placeholder="6281234567890 或 62812…@g.us" required>
+        <input id="chat_id" name="chat_id" placeholder="6281234567890 or 62812…@g.us" required>
         <div>
-          <label for="contact_pick" style="margin-top:0;">从联系人选择</label>
+          <label for="contact_pick" style="margin-top:0;">Choose from contacts</label>
           <select id="contact_pick">
-            <option value="">— 联系人 —</option>
+            <option value="">— Contacts —</option>
             <% for (const c of contacts) { %>
               <option value="<%= c.phone %>" data-name="<%= c.name %>"><%= c.name %> (<%= c.phone %>)</option>
             <% } %>
@@ -41,10 +41,10 @@
         </div>
       </div>
 
-      <label for="body">消息内容</label>
-      <textarea id="body" name="body" required placeholder="输入消息…"></textarea>
+      <label for="body">Message</label>
+      <textarea id="body" name="body" required placeholder="Enter a message…"></textarea>
 
-      <button type="submit">发送</button>
+      <button type="submit">Send</button>
     </form>
   </div>
 <% } %>

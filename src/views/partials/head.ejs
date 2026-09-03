@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,13 +52,13 @@
 <body>
   <nav>
     <span class="brand">📱 WA Corporate</span>
-    <a href="/" class="<%= typeof active !== 'undefined' && active === 'overview' ? 'active' : '' %>">总览</a>
-    <a href="/sessions" class="<%= typeof active !== 'undefined' && active === 'sessions' ? 'active' : '' %>">会话</a>
-    <a href="/send" class="<%= typeof active !== 'undefined' && active === 'send' ? 'active' : '' %>">发送</a>
-    <a href="/scheduled" class="<%= typeof active !== 'undefined' && active === 'scheduled' ? 'active' : '' %>">计划</a>
-    <a href="/templates" class="<%= typeof active !== 'undefined' && active === 'templates' ? 'active' : '' %>">模板</a>
-    <a href="/contacts" class="<%= typeof active !== 'undefined' && active === 'contacts' ? 'active' : '' %>">联系人</a>
-    <a href="/inbox" class="<%= typeof active !== 'undefined' && active === 'inbox' ? 'active' : '' %>">收件箱</a>
+    <a href="/" class="<%= typeof active !== 'undefined' && active === 'overview' ? 'active' : '' %>">Overview</a>
+    <a href="/sessions" class="<%= typeof active !== 'undefined' && active === 'sessions' ? 'active' : '' %>">Sessions</a>
+    <a href="/send" class="<%= typeof active !== 'undefined' && active === 'send' ? 'active' : '' %>">Send</a>
+    <a href="/scheduled" class="<%= typeof active !== 'undefined' && active === 'scheduled' ? 'active' : '' %>">Scheduled</a>
+    <a href="/templates" class="<%= typeof active !== 'undefined' && active === 'templates' ? 'active' : '' %>">Templates</a>
+    <a href="/contacts" class="<%= typeof active !== 'undefined' && active === 'contacts' ? 'active' : '' %>">Contacts</a>
+    <a href="/inbox" class="<%= typeof active !== 'undefined' && active === 'inbox' ? 'active' : '' %>">Inbox</a>
   </nav>
   <main>
     <% if (typeof flash !== 'undefined' && flash) { %>

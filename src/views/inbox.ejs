@@ -1,31 +1,31 @@
 <%- include('partials/head', { active: 'inbox' }) %>
 
-<h1>收件箱</h1>
+<h1>Inbox</h1>
 
 <div class="card">
   <form method="get" action="/inbox">
     <div class="row">
-      <div><label for="q">搜索消息 / 联系人 / 聊天</label><input id="q" name="q" value="<%= filters?.query || '' %>" placeholder="关键词"></div>
-      <div><label for="from">从日期</label><input id="from" type="date" name="from" value="<%= filters?.from || '' %>"></div>
-      <div><label for="to">到日期</label><input id="to" type="date" name="to" value="<%= filters?.to || '' %>"></div>
+      <div><label for="q">Search messages / contacts / chats</label><input id="q" name="q" value="<%= filters?.query || '' %>" placeholder="Keyword"></div>
+      <div><label for="from">From date</label><input id="from" type="date" name="from" value="<%= filters?.from || '' %>"></div>
+      <div><label for="to">To date</label><input id="to" type="date" name="to" value="<%= filters?.to || '' %>"></div>
     </div>
-    <button type="submit">搜索</button>
-    <a class="button-link" href="/inbox">清除</a>
-    <a class="button-link" href="/export/messages.csv">导出消息 CSV</a>
-    <a class="button-link" href="/export/contacts.csv">导出联系人 CSV</a>
+    <button type="submit">Search</button>
+    <a class="button-link" href="/inbox">Clear</a>
+    <a class="button-link" href="/export/messages.csv">Export messages CSV</a>
+    <a class="button-link" href="/export/contacts.csv">Export contacts CSV</a>
   </form>
 </div>
 
 <% if (chat) { %>
   <div class="card">
-    <h2 style="margin-top:0;">会话：<%= chat_id %></h2>
-    <a href="/inbox" class="muted">← 返回全部消息</a>
+    <h2 style="margin-top:0;">Chat: <%= chat_id %></h2>
+    <a href="/inbox" class="muted">← Back to all messages</a>
     <div style="margin-top:12px;">
       <% for (const m of chat) { %>
         <div style="margin-bottom:10px; <%= m.direction === 'out' ? 'text-align:right;' : '' %>">
           <div style="display:inline-block; max-width:70%; background: <%= m.direction === 'out' ? '#dbeafe' : '#fff' %>; border:1px solid var(--border); border-radius:10px; padding:8px 12px; text-align:left;">
             <pre class="body"><%= m.body %></pre>
-            <div class="muted"><%= m.direction === 'out' ? '→ 发出' : '← 收到' %> · <%= m.created_at %></div>
+            <div class="muted"><%= m.direction === 'out' ? '→ Sent' : '← Received' %> · <%= m.created_at %></div>
           </div>
         </div>
       <% } %>
@@ -33,12 +33,12 @@
   </div>
 <% } else { %>
   <div class="card">
-    <h2 style="margin-top:0;">收到的消息 (<%= inbox.length %>)</h2>
+    <h2 style="margin-top:0;">Received messages (<%= inbox.length %>)</h2>
     <% if (!inbox.length) { %>
-      <div class="empty">还没有收到的消息</div>
+      <div class="empty">No received messages yet</div>
     <% } else { %>
       <table>
-        <tr><th>时间</th><th>会话</th><th>聊天</th><th>联系人</th><th>内容</th><th></th></tr>
+        <tr><th>Time</th><th>Session</th><th>Chat</th><th>Contact</th><th>Message</th><th></th></tr>
         <% for (const m of inbox) { %>
           <tr>
             <td class="muted"><%= m.created_at %></td>
@@ -46,7 +46,7 @@
             <td><%= m.chat_id %></td>
             <td><%= m.contact_name || '—' %></td>
             <td><pre class="body"><%= m.body.length > 60 ? m.body.slice(0, 60) + '…' : m.body %></pre></td>
-            <td><a href="/inbox?chat=<%= encodeURIComponent(m.chat_id) %>">查看</a></td>
+            <td><a href="/inbox?chat=<%= encodeURIComponent(m.chat_id) %>">View</a></td>
           </tr>
         <% } %>
       </table>
@@ -54,19 +54,19 @@
   </div>
 
   <div class="card">
-    <h2 style="margin-top:0;">发出的消息 (<%= outbox.length %>)</h2>
+    <h2 style="margin-top:0;">Sent messages (<%= outbox.length %>)</h2>
     <% if (!outbox.length) { %>
-      <div class="empty">还没有发出的消息</div>
+      <div class="empty">No sent messages yet</div>
     <% } else { %>
       <table>
-        <tr><th>时间</th><th>会话</th><th>聊天</th><th>内容</th><th></th></tr>
+        <tr><th>Time</th><th>Session</th><th>Chat</th><th>Message</th><th></th></tr>
         <% for (const m of outbox) { %>
           <tr>
             <td class="muted"><%= m.created_at %></td>
             <td><%= m.session %></td>
             <td><%= m.chat_id %></td>
             <td><pre class="body"><%= m.body.length > 60 ? m.body.slice(0, 60) + '…' : m.body %></pre></td>
-            <td><a href="/inbox?chat=<%= encodeURIComponent(m.chat_id) %>">查看</a></td>
+            <td><a href="/inbox?chat=<%= encodeURIComponent(m.chat_id) %>">View</a></td>
           </tr>
         <% } %>
       </table>

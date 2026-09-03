@@ -1,27 +1,27 @@
 <%- include('partials/head', { active: 'sessions' }) %>
 
-<h1>会话管理</h1>
+<h1>Session management</h1>
 
 <div class="card">
-  <h2 style="margin-top:0;">新增会话</h2>
+  <h2 style="margin-top:0;">Add session</h2>
   <form method="post" action="/sessions/start" class="row">
     <div>
-      <label for="name">会话名称（仅字母数字和 -）</label>
-      <input id="name" name="name" placeholder="例如 sales-1" required pattern="[\w-]+">
+      <label for="name">Session name (letters, numbers, and - only)</label>
+      <input id="name" name="name" placeholder="e.g. sales-1" required pattern="[\w-]+">
     </div>
     <div style="flex:0;">
-      <button type="submit">创建 / 连接</button>
+      <button type="submit">Create / connect</button>
     </div>
   </form>
-  <p class="muted" style="margin-bottom:0;">创建后会显示二维码，用 WhatsApp「已链接的设备」扫码绑定。</p>
+  <p class="muted" style="margin-bottom:0;">A QR code will appear after creation. Scan it with WhatsApp: Linked devices > Link a device.</p>
 </div>
 
 <div class="card">
   <% if (!sessions.length) { %>
-    <div class="empty">还没有会话 — 用上面的表单创建第一个</div>
+    <div class="empty">No sessions yet - use the form above to create the first one</div>
   <% } else { %>
     <table>
-      <tr><th>名称</th><th>状态</th><th>手机号</th><th>已存凭据</th><th style="width:140px;"></th></tr>
+      <tr><th>Name</th><th>Status</th><th>Phone</th><th>Auth saved</th><th style="width:140px;"></th></tr>
       <% for (const s of sessions) { const st = states[s.name] || {}; %>
         <tr data-session="<%= s.name %>">
           <td><strong><%= s.name %></strong></td>
@@ -29,9 +29,9 @@
           <td data-role="phone"><%= s.phone || st.phone || '—' %></td>
           <td><%= s.hasAuth ? '✓' : '—' %></td>
           <td>
-            <form method="post" action="/sessions/stop" style="margin:0;" onsubmit="return confirm('确定断开并删除会话 <%= s.name %> ?')">
+            <form method="post" action="/sessions/stop" style="margin:0;" onsubmit="return confirm('Disconnect and delete session <%= s.name %> ?')">
               <input type="hidden" name="name" value="<%= s.name %>">
-              <button class="mini danger" type="submit">断开</button>
+              <button class="mini danger" type="submit">Disconnect</button>
             </form>
           </td>
         </tr>
@@ -40,7 +40,7 @@
             <td colspan="5" style="text-align:center;">
               <img data-role="qr" alt="QR" style="width:220px;height:220px;"
                    src="<%= st.qr || '' %>">
-              <p class="muted" data-role="qr-hint">二维码会自动刷新 — 打开 WhatsApp → 已链接的设备 → 链接设备</p>
+              <p class="muted" data-role="qr-hint">The QR code refreshes automatically - open WhatsApp > Linked devices > Link a device</p>
             </td>
           </tr>
         <% } %>
