@@ -1,3 +1,30 @@
   </main>
+  <script>
+    // Insert WhatsApp formatting markers around the current selection or cursor.
+    (function initMessageFormatting() {
+      const markers = { bold: "*", italic: "_", strike: "~", code: "```" };
+      document.querySelectorAll("[data-message-editor]").forEach(function (editor) {
+        const textarea = editor.querySelector("textarea");
+        if (!textarea) return;
+        editor.querySelectorAll("[data-format]").forEach(function (button) {
+          button.addEventListener("mousedown", function (event) { event.preventDefault(); });
+          button.addEventListener("click", function () {
+            const marker = markers[button.dataset.format];
+            if (!marker) return;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selected = textarea.value.slice(start, end);
+            const wrapped = marker + selected + marker;
+            textarea.value = textarea.value.slice(0, start) + wrapped + textarea.value.slice(end);
+            const cursorStart = selected ? start + wrapped.length : start + marker.length;
+            textarea.focus();
+            textarea.setSelectionRange(selected ? start : cursorStart, selected ? start + wrapped.length : cursorStart);
+            textarea.dispatchEvent(new Event("input", { bubbles: true }));
+          });
+        });
+      });
+    })();
+  </script>
+
 </body>
 </html>

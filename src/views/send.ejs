@@ -42,7 +42,16 @@
       </div>
 
       <label for="body">Message</label>
-      <textarea id="body" name="body" required placeholder="Enter a message…"></textarea>
+      <div class="message-editor" data-message-editor>
+        <div class="message-toolbar" role="toolbar" aria-label="Message formatting">
+          <button type="button" class="format-button" data-format="bold" title="Bold" aria-label="Bold"><svg class="icon" aria-hidden="true"><use href="#icon-bold"></use></svg></button>
+          <button type="button" class="format-button" data-format="italic" title="Italic" aria-label="Italic"><svg class="icon" aria-hidden="true"><use href="#icon-italic"></use></svg></button>
+          <button type="button" class="format-button" data-format="strike" title="Strikethrough" aria-label="Strikethrough"><svg class="icon" aria-hidden="true"><use href="#icon-strike"></use></svg></button>
+          <span class="format-divider" aria-hidden="true"></span>
+          <button type="button" class="format-button" data-format="code" title="Monospace" aria-label="Monospace"><svg class="icon" aria-hidden="true"><use href="#icon-code"></use></svg></button>
+        </div>
+        <textarea id="body" name="body" required placeholder="Enter a message…"></textarea>
+      </div>
 
       <button type="submit"><svg class="icon button-icon" aria-hidden="true"><use href="#icon-send"></use></svg>Send</button>
     </form>
